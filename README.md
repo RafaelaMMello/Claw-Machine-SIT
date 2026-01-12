@@ -1,1 +1,1 @@
-# Python-project---SIT-
+# Claw Machine Game in Python
