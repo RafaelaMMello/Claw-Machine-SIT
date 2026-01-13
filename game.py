@@ -9,3 +9,6 @@ class Claw(Game):
 
 class Prize(Game):
     pass
+
+class oi():
+    pass
