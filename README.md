@@ -1,1 +1,1 @@
-# Claw Machine Game in Python
+# Gacha Machine Game in Python
