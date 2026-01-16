@@ -7,14 +7,18 @@ pygame.init()
 # Configurações da janela
 width, height = 800, 600
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Claw Machine Game")
+pygame.display.set_caption("Gachapon Game")
 
 # Cores
-WHITE = (255, 255, 255)
 ORANGE = (255, 136, 72)
 LIGHT_GRAY = (217, 217, 217)
 DARK_GRAY = (194, 192, 192)
 ACTIVE_COLOR = (240, 240, 240)
+
+WHITE = (255, 255, 255)
+BACKGROUND_GRAY =(186, 186, 186)
+BUTTON_GRAY = (198, 198, 198)
+BUTTON_SHADOW_GRAY = (147, 147, 147)
 
 # Relógio
 clock = pygame.time.Clock()
@@ -33,102 +37,114 @@ current_screen = "menu"
 
 # Fontes
 try:
-    fonte_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 48)
-    font_buttons = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 24)
-    font_warning = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 16)
+    font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 64)
+    font_buttons = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 36 )
+    font_warning = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 24)
 except:
-    fonte_title = pygame.font.SysFont(None, 60)
+    font_title = pygame.font.SysFont(None, 60)
     font_buttons = pygame.font.SysFont(None, 24)
     font_warning = pygame.font.SysFont(None, 20)
 
 # --- button draw function --- #
-def draw_button(x, y, w, h, text, font, text_color, button_color, shadow_color):
+def draw_button(x, y, w, h, text, font, text_color, button_color, shadow_color, border_color, border_width=2):
+    # SHADOW
     pygame.draw.rect(screen, shadow_color, (x, y + 10, w, h), border_radius=16)
+
+    # BUTTON BODY
     pygame.draw.rect(screen, button_color, (x, y, w, h), border_radius=16)
+
+    # BUTTON BORDER
+    pygame.draw.rect(screen, border_color, (x, y, w, h), border_radius=16, width=border_width)
     txt = font.render(text, True, text_color)
     txt_rect = txt.get_rect(center=(x + w // 2, y + h // 2))
     screen.blit(txt, txt_rect)
+
     return pygame.Rect(x, y, w, h)
 
 # --- Input field draw function --- #
 def draw_input_box(x, y, w, h, text, active, placeholder="", is_password=False):
-    color = ACTIVE_COLOR if active else LIGHT_GRAY
-    shadow_color = DARK_GRAY
-
+    color = ACTIVE_COLOR if active else BUTTON_GRAY
+    shadow_color = BUTTON_SHADOW_GRAY
+    border_color = BUTTON_SHADOW_GRAY
+    border_width = 2
+    # SHADOW
     pygame.draw.rect(screen, shadow_color, (x, y + 10, w, h), border_radius=16)
+    
+    # BODY
     pygame.draw.rect(screen, color, (x, y, w, h), border_radius=16)
+
+    # BORDER
+    pygame.draw.rect(screen, border_color, (x, y, w, h), border_radius=16, width=border_width)
 
     if text == "" and not active:
         display_text = placeholder
-        txt_color = (150, 150, 150)
+        txt_color = (212, 212, 212)
     else:
         display_text = "*" * len(text) if is_password and text else text
-        txt_color = ORANGE
+        txt_color = BUTTON_SHADOW_GRAY
 
     txt = font_buttons.render(display_text, True, txt_color)
-    txt_rect = txt.get_rect(midleft=(x + 15, y + h // 2))
+    txt_rect = txt.get_rect(midleft=(x + 3, y + h // 2))
     screen.blit(txt, txt_rect)
+    
     return pygame.Rect(x, y, w, h)
 
 # --- MENU ---
 def draw_menu():
-    screen.fill(ORANGE)
-    title = fonte_title.render("Claw Machine", True, WHITE)
-    rect_title = title.get_rect(center=(width // 2, 144))
-    screen.blit(title, rect_title)
+    screen.fill(BACKGROUND_GRAY)
+    title = font_title.render("Gachapon Game", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
 
-    btn_guest = draw_button(260, 274, 279, 76, "Guest", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_login = draw_button(260, 374, 279, 76, "Login", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_signup = draw_button(260, 474, 279, 76, "Sign Up", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
+    btn_guest = draw_button((width // 2 - 258 // 2), 240, 258, 64, "Guest", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_login = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Login", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
     return btn_guest, btn_login, btn_signup
 
 # --- GUEST ---
 def draw_guest():
-    screen.fill(ORANGE)
-    guest_title = fonte_title.render("Guest", True, WHITE)
-    rect_guest = guest_title.get_rect(center=(width // 2, 144))
-    screen.blit(guest_title, rect_guest)
-
-    warning = font_warning.render("IF YOU CONTINUE WITHOUT LOGIN", True, WHITE)
-    warning2 = font_warning.render("YOU CAN'T REGISTER YOUR POINTS", True, WHITE)
-    screen.blit(warning, warning.get_rect(center=(width // 2, 210)))
-    screen.blit(warning2, warning2.get_rect(center=(width // 2, 235)))
-
-    btn_signup_guest = draw_button(260, 320, 279, 76, "Sign Up", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_continue = draw_button(260, 420, 279, 76, "Continue", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_back = draw_button(260, 520, 279, 50, "Back", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-
-    return btn_continue, btn_signup_guest, btn_back
-
-# --- Sign up ---
-def draw_signup(username_text, password_text, rptpassword_text, active_field):
-    screen.fill(ORANGE)
-    title = fonte_title.render("Sign Up", True, WHITE)
-    screen.blit(title, title.get_rect(center=(width // 2, 100)))
-
-    username_box = draw_input_box(260, 200, 279, 60, username_text, active_field == "username", "Username")
-    password_box = draw_input_box(260, 280, 279, 60, password_text, active_field == "password", "Password", is_password=True)
-    rptpassword_box = draw_input_box(260, 360, 279, 60, rptpassword_text, active_field == "rptpassword", "Password Again", is_password=True)
-
-    btn_register = draw_button(260, 450, 279, 70, "Register", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_back = draw_button(260, 535, 279, 50, "Back", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
+    screen.fill(BACKGROUND_GRAY)
+    title = font_title.render("Continue as guest", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
     
-    return username_box, password_box, rptpassword_box, btn_register, btn_back
+    warning = font_warning.render("IF YOU CONTINUE AS A GUEST", True, WHITE)
+    warning2 = font_warning.render("YOU CAN'T REGISTER YOUR POINTS", True, WHITE)
+    screen.blit(warning, warning.get_rect(center=(width // 2, 220)))
+    screen.blit(warning2, warning2.get_rect(center=(width // 2, 255)))
+    
+    btn_continue = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 486, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    return btn_continue, btn_signup, btn_back
 
-# --- Login ---
+# --- LOGIN ---
 def draw_login(login_username, login_password, active_field):
-    screen.fill(ORANGE)
-    title = fonte_title.render("Login", True, WHITE)
-    screen.blit(title, title.get_rect(center=(width // 2, 100)))
+    screen.fill(BACKGROUND_GRAY)
+    title = font_title.render("Login", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
 
-    username_box = draw_input_box(260, 240, 279, 60, login_username, active_field == "login_username", "Username")
-    password_box = draw_input_box(260, 320, 279, 60, login_password, active_field == "login_password", "Password", is_password=True)
+    username_box = draw_input_box((width // 2 - 258 // 2), 248, 258, 64, login_username, active_field == "login_username", "Username")
+    password_box = draw_input_box((width // 2 - 258 // 2), 330, 258, 64, login_password, active_field == "login_password", "Password", is_password=True)
 
-    btn_login = draw_button(260, 420, 279, 70, "Login", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
-    btn_back = draw_button(260, 510, 279, 50, "Back", font_buttons, ORANGE, LIGHT_GRAY, DARK_GRAY)
+    btn_login = draw_button((width // 2 - 258 // 2), 412, 258, 64, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
     return username_box, password_box, btn_login, btn_back
+  
+# --- SIGN UP ---
+def draw_signup(signup_username, signup_password, signup_password_confirm, active_field):
+    screen.fill(BACKGROUND_GRAY)
+    title = font_title.render("Sign Up", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
+    
+    username_box = draw_input_box((width // 2 - 258 // 2), 198, 258, 64, signup_username, active_field == "signup_username", "Username")
+    password_box = draw_input_box((width // 2 - 258 // 2), 280, 258, 64, signup_password, active_field == "signup_password", "Password", is_password=True)
+    password_confirm_box = draw_input_box((width // 2 - 258 // 2), 362, 258, 64, signup_password_confirm, active_field == "signup_password_confirm", "Password", is_password=True)
+
+    btn_register = draw_button((width // 2 - 258 // 2), 444, 258, 64, "Register", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 526, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+
+    return username_box, password_box, password_confirm_box, btn_register, btn_back
 
 # Inicializar variáveis de botões
 btn_guest = btn_login = btn_signup = pygame.Rect(0, 0, 0, 0)
@@ -168,12 +184,12 @@ while running:
                     
             # --- SIGN UP ---
             elif current_screen == "signup":
-                if username_box.collidepoint(mouse_pos):
-                    active_field = "username"
-                elif password_box.collidepoint(mouse_pos):
-                    active_field = "password"
-                elif rptpassword_box.collidepoint(mouse_pos):
-                    active_field = "rptpassword"
+                if signup_username_box.collidepoint(mouse_pos):
+                    active_field = "signup_username"
+                elif signup_password_box.collidepoint(mouse_pos):
+                    active_field = "signup_password"
+                elif signup_password_confirm_box.collidepoint(mouse_pos):
+                    active_field = "signup_password_confirm"
                 elif btn_back.collidepoint(mouse_pos):
                     current_screen = "menu"
                     active_field = None
@@ -216,11 +232,11 @@ while running:
         # Captura digitação
         if event.type == pygame.KEYDOWN and active_field:
             if event.key == pygame.K_BACKSPACE:
-                if active_field == "username":
+                if active_field == "signup_username":
                     username_text = username_text[:-1]
-                elif active_field == "password":
+                elif active_field == "signup_password":
                     password_text = password_text[:-1]
-                elif active_field == "rptpassword":
+                elif active_field == "signup_password_confirm":
                     rptpassword_text = rptpassword_text[:-1]
                 elif active_field == "login_username":
                     login_username = login_username[:-1]
@@ -233,27 +249,27 @@ while running:
                     print(f"Login: {login_username}")
             else:
                 char = event.unicode
-                if active_field == "username" and len(username_text) < 20:
+                if active_field == "signup_username" and len(username_text) < 20:
                     username_text += char
-                elif active_field == "password" and len(password_text) < 20:
+                elif active_field == "signup_password" and len(password_text) < 20:
                     password_text += char
-                elif active_field == "rptpassword" and len(rptpassword_text) < 20:
+                elif active_field == "signup_password_confirm" and len(rptpassword_text) < 20:
                     rptpassword_text += char
                 elif active_field == "login_username" and len(login_username) < 20:
                     login_username += char
                 elif active_field == "login_password" and len(login_password) < 20:
                     login_password += char
 
+
     # --- Renderização ---
     if current_screen == "menu":
         btn_guest, btn_login, btn_signup = draw_menu()
     elif current_screen == "guest":
-        btn_continue, btn_signup_guest, btn_back = draw_guest()
+        btn_continue, btn_signup, btn_back = draw_guest()
     elif current_screen == "login":
         login_username_box, login_password_box, btn_login_submit, btn_back = draw_login(login_username, login_password, active_field)
     elif current_screen == "signup":
-        username_box, password_box, rptpassword_box, btn_register, btn_back = draw_signup(username_text, password_text, rptpassword_text, active_field)
-
+        signup_username_box, signup_password_box, signup_password_confirm_box, btn_register, btn_back = draw_signup(username_text, password_text, rptpassword_text, active_field)
     pygame.display.flip()
     clock.tick(60)
 
