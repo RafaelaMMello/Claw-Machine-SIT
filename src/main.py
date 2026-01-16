@@ -1,5 +1,7 @@
 import pygame
 import sys
+import csv
+import os
 
 # Inicializa o Pygame
 pygame.init()
@@ -10,11 +12,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Gachapon Game")
 
 # Cores
-ORANGE = (255, 136, 72)
-LIGHT_GRAY = (217, 217, 217)
-DARK_GRAY = (194, 192, 192)
 ACTIVE_COLOR = (240, 240, 240)
-
 WHITE = (255, 255, 255)
 BACKGROUND_GRAY =(186, 186, 186)
 BUTTON_GRAY = (198, 198, 198)
@@ -146,6 +144,42 @@ def draw_signup(signup_username, signup_password, signup_password_confirm, activ
 
     return username_box, password_box, password_confirm_box, btn_register, btn_back
 
+# --- register user
+def save_user_to_csv(username, password, filepath="data\\users.csv"):
+    # Se o arquivo não existir, cria com cabeçalho
+    file_exists = os.path.exists(filepath)
+
+    # Garante que não há duplicatas
+    if file_exists:
+        with open(filepath, "r", newline="", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row["username"] == username:
+                    return False  # usuário já existe
+
+    # Escreve o novo usuário
+    with open(filepath, "a", newline="", encoding="utf-8") as file:
+        fieldnames = ["username", "password"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+        if not file_exists:
+            writer.writeheader()
+
+        writer.writerow({"username": username, "password": password})
+    return True
+
+
+# --- check login
+def check_login(username, password, filepath="data\\users.csv"):
+    if not os.path.exists(filepath):
+        return False
+    with open(filepath, "r", newline="", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row["username"] == username and row["password"] == password:
+                return True
+    return False
+
 # Inicializar variáveis de botões
 btn_guest = btn_login = btn_signup = pygame.Rect(0, 0, 0, 0)
 btn_continue = btn_back = btn_signup_guest = pygame.Rect(0, 0, 0, 0)
@@ -198,14 +232,18 @@ while running:
                     rptpassword_text = ""
                 elif btn_register.collidepoint(mouse_pos):
                     if password_text == rptpassword_text and password_text != "":
-                        print(f"Usuário registrado: {username_text}")
-                        current_screen = "menu"
+                        success = save_user_to_csv(username_text, password_text)
+                        if success:
+                            print(f"✅ Usuário registrado: {username_text}")
+                            current_screen = "menu"
+                        else:
+                            print("⚠️ Usuário já existe!")
                         username_text = ""
                         password_text = ""
                         rptpassword_text = ""
                         active_field = None
                     else:
-                        print("Senhas não coincidem!")
+                        print("❌ Senhas não coincidem!")
                 else:
                     active_field = None
 
@@ -221,8 +259,11 @@ while running:
                     login_username = ""
                     login_password = ""
                 elif btn_login_submit.collidepoint(mouse_pos):
-                    print(f"Login: {login_username}")
-                    current_screen = "menu"
+                    if check_login(login_username, login_password):
+                        print(f"✅ Login bem-sucedido: {login_username}")
+                        current_screen = "menu"
+                    else:
+                        print("❌ Usuário ou senha incorretos.")
                     login_username = ""
                     login_password = ""
                     active_field = None
