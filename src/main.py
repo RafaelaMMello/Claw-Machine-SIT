@@ -17,6 +17,7 @@ WHITE = (255, 255, 255)
 BACKGROUND_GRAY =(186, 186, 186)
 BUTTON_GRAY = (198, 198, 198)
 BUTTON_SHADOW_GRAY = (147, 147, 147)
+LIGHT_GRAY = (217, 217, 217)
 
 # Clock
 clock = pygame.time.Clock()
@@ -38,10 +39,12 @@ try:
     font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 64)
     font_buttons = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 36 )
     font_warning = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 24)
+    font_rarity = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 23)
 except:
     font_title = pygame.font.SysFont(None, 60)
-    font_buttons = pygame.font.SysFont(None, 24)
-    font_warning = pygame.font.SysFont(None, 20)
+    font_buttons = pygame.font.SysFont(None, 36)
+    font_warning = pygame.font.SysFont(None, 24)
+    font_rarity = pygame.font.SysFont(None, 23)
 
 # --- BUTTON DRAW FUNCTION --- #
 def draw_button(x, y, w, h, text, font, text_color, button_color, shadow_color, border_color, border_width=2):
@@ -155,6 +158,74 @@ def draw_welcome_guest():
     
     return btn_play, btn_rarity
 
+# --- WELCOME (USER) SCREEN --- #
+def draw_welcome_user(username):
+    screen.fill(BACKGROUND_GRAY)
+    
+    title = font_title.render("Welcome", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 48)))
+        
+    subtitle = font_title.render(username, True, WHITE)
+    screen.blit(subtitle, subtitle.get_rect(center=(width // 2, 111)))
+    
+    
+    btn_play = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Play", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_inventory = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Inventory", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_rarity = draw_button((width // 2 - 258 // 2), 486, 258, 64, "Rarity", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    
+    return btn_play, btn_rarity, btn_inventory
+        
+# --- RARITY SCREEN --- #
+def draw_rarity():
+    screen.fill(BACKGROUND_GRAY)
+    title = font_title.render("Rarity", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 81)))
+    
+    # RARITY 
+    legendary = font_rarity.render("Legendary", True, WHITE)
+    super_rare = font_rarity.render("Super Rare", True, WHITE)
+    rare = font_rarity.render("Rare", True, WHITE)
+    common = font_rarity.render("Common", True, WHITE)
+
+    screen.blit(legendary, legendary.get_rect(topleft=(11, 229)))
+    screen.blit(super_rare, super_rare.get_rect(topleft=(212, 229)))
+    screen.blit(rare, rare.get_rect(topleft=(467, 229)))
+    screen.blit(common, common.get_rect(topleft = (638, 229)))
+    
+    # SQUARES
+    pygame.draw.rect(screen, LIGHT_GRAY, (23, 265, 139, 139), border_radius=16)
+    pygame.draw.rect(screen, LIGHT_GRAY, (228, 265, 139, 139), border_radius=16)
+    pygame.draw.rect(screen, LIGHT_GRAY, (433, 265, 139, 139), border_radius=16)
+    pygame.draw.rect(screen, LIGHT_GRAY, (638, 265, 139, 139), border_radius=16)
+
+    # PERCENTAGE
+    legendary_percentage = font_rarity.render("01%", True, WHITE)
+    super_percentage = font_rarity.render("10%", True, WHITE)
+    rare_percentage = font_rarity.render("30%", True, WHITE)
+    common_percentage = font_rarity.render("70%", True, WHITE)
+    
+    screen.blit(legendary_percentage, legendary_percentage.get_rect(center=(92, 385)))
+    screen.blit(super_percentage, super_percentage.get_rect(center=(297, 385)))
+    screen.blit(rare_percentage, rare_percentage.get_rect(center=(502, 385)))
+    screen.blit(common_percentage, common_percentage.get_rect(center = (707, 385)))
+    
+    # IMAGES
+    legendary_ball = pygame.image.load("assets\images\legendary gacha ball closed.png").convert_alpha()
+    super_rare_ball = pygame.image.load("assets\images\super rare gacha ball closed.png").convert_alpha()
+    rare_ball = pygame.image.load("assets\images\\rare gacha ball closed.png").convert_alpha()
+    common_ball = pygame.image.load("assets\images\common gacha ball closed.png").convert_alpha()
+
+    screen.blit(legendary_ball, legendary_ball.get_rect(topleft=(38, 279)))
+    screen.blit(super_rare_ball, super_rare_ball.get_rect(topleft=(243, 279)))
+    screen.blit(rare_ball, rare_ball.get_rect(topleft=(448, 279)))
+    screen.blit(common_ball, common_ball.get_rect(topleft=(653, 279)))
+
+    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    return btn_back
+
+# --- GACHAPON SCREEN --- #
+# --- INVENTORY SCREEN --- #
+
 # --- REGISTER USER FUNCTION --- #
 def save_user_to_csv(username, password, filepath="data\\users.csv"):
     # VERIFY IF THE FILE EXIST 
@@ -221,6 +292,7 @@ while running:
             # --- GUEST --- #
             elif current_screen == "guest":
                 if btn_continue.collidepoint(mouse_pos):
+                    current_user = ""
                     current_screen = "welcome_guest"
                 elif btn_signup_guest.collidepoint(mouse_pos):
                     current_screen = "signup"
@@ -247,7 +319,8 @@ while running:
                         success = save_user_to_csv(username_text, password_text)
                         if success:
                             print(f"✅ USER CREATED: {username_text}")
-                            current_screen = "menu"
+                            current_user = username_text
+                            current_screen = "welcome_user"
                         else:
                             print("⚠️ USER ALREADY EXIST!")
                         username_text = ""
@@ -272,8 +345,9 @@ while running:
                     login_password = ""
                 elif btn_login_submit.collidepoint(mouse_pos):
                     if check_login(login_username, login_password):
-                        print(f"✅ LOGIN: {login_username}")
-                        current_screen = "menu"
+                        current_user = login_username
+                        print(f"✅ LOGIN: {current_user}")
+                        current_screen = "welcome_user"
                     else:
                         print("❌ USER OR PASSWORD INCORRECT.")
                     login_username = ""
@@ -281,12 +355,29 @@ while running:
                     active_field = None
                 else:
                     active_field = None
-                                    
+                                 
+            # --- WELCOME (GUEST) --- #   
             elif current_screen == "welcome_guest":
-                            if btn_play.collidepoint(mouse_pos):
-                                print("Go to game")
-                            elif btn_rarity.collidepoint(mouse_pos):
-                                current_screen = "Rarity"
+                if btn_play.collidepoint(mouse_pos):
+                    print("Go to game")
+                elif btn_rarity.collidepoint(mouse_pos):
+                    current_screen = "rarity"
+                    
+            #--- WELCOME (USER) --- #     
+            elif current_screen == "welcome_user":
+                if btn_play.collidepoint(mouse_pos):
+                    print("Go to game")
+                elif btn_rarity.collidepoint(mouse_pos):
+                    current_screen = "rarity"
+                elif btn_inventory.collidepoint(mouse_pos):
+                    print("To the inventory")
+                    
+            # --- RARITY --- #
+            elif current_screen == "rarity":
+                if btn_back.collidepoint(mouse_pos) and current_user!="":
+                    current_screen = "welcome_user"
+                elif btn_back.collidepoint(mouse_pos):
+                    current_screen = "welcome_guest"
 
         # CAPTURE THE KEYBOARD 
         if event.type == pygame.KEYDOWN and active_field:
@@ -329,7 +420,11 @@ while running:
     elif current_screen == "signup":
         signup_username_box, signup_password_box, signup_password_confirm_box, btn_register, btn_back = draw_signup(username_text, password_text, rptpassword_text, active_field)
     elif current_screen == "welcome_guest":
-        btn_play, btn_rarity == draw_welcome_guest()
+        btn_play, btn_rarity = draw_welcome_guest()
+    elif current_screen == "welcome_user":
+        btn_play, btn_rarity, btn_inventory = draw_welcome_user(current_user)
+    elif current_screen == "rarity":
+        btn_back = draw_rarity()
     pygame.display.flip()
     clock.tick(60)
 
