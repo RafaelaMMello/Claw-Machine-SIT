@@ -23,13 +23,15 @@ LIGHT_GRAY = (217, 217, 217)
 clock = pygame.time.Clock()
 running = True
 
-# Txt Variables
+# Variables
 username_text = ""
 password_text = ""
 rptpassword_text = ""
 login_username = ""
 login_password = ""
 active_field = None
+scroll_y = 0
+scroll_speed = 40
 
 # Current Screen
 current_screen = "menu"
@@ -210,10 +212,10 @@ def draw_rarity():
     screen.blit(common_percentage, common_percentage.get_rect(center = (707, 385)))
     
     # IMAGES
-    legendary_ball = pygame.image.load("assets\images\legendary gacha ball closed.png").convert_alpha()
-    super_rare_ball = pygame.image.load("assets\images\super rare gacha ball closed.png").convert_alpha()
-    rare_ball = pygame.image.load("assets\images\\rare gacha ball closed.png").convert_alpha()
-    common_ball = pygame.image.load("assets\images\common gacha ball closed.png").convert_alpha()
+    legendary_ball = pygame.image.load("assets\images\\rarity_screen\legendary gacha ball closed.png").convert_alpha()
+    super_rare_ball = pygame.image.load("assets\images\\rarity_screen\super rare gacha ball closed.png").convert_alpha()
+    rare_ball = pygame.image.load("assets\images\\rarity_screen\\rare gacha ball closed.png").convert_alpha()
+    common_ball = pygame.image.load("assets\images\\rarity_screen\common gacha ball closed.png").convert_alpha()
 
     screen.blit(legendary_ball, legendary_ball.get_rect(topleft=(38, 279)))
     screen.blit(super_rare_ball, super_rare_ball.get_rect(topleft=(243, 279)))
@@ -224,7 +226,106 @@ def draw_rarity():
     return btn_back
 
 # --- GACHAPON SCREEN --- #
+def draw_gachapon():
+    screen.fill(BACKGROUND_GRAY)
+    
+    # TITLE
+    title = font_title.render("Gachapon", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
+    
+    # DESCRIPTIONS
+    legendary_desc = font_warning.render("Legendary - 200", True, WHITE)
+    super_rare_desc = font_warning.render("Super rare - 150", True, WHITE)
+    rare_desc = font_warning.render("Rare - 100", True, WHITE)
+    commun_desc = font_warning.render("Commun - 25", True, WHITE)
+    
+    screen.blit(legendary_desc, legendary_desc.get_rect(topleft=(494, 232)))
+    screen.blit(super_rare_desc, super_rare_desc.get_rect(topleft=(494, 288)))
+    screen.blit(rare_desc, rare_desc.get_rect(topleft=(494, 343)))
+    screen.blit(commun_desc, commun_desc.get_rect(topleft=(494, 399)))
+
+    # GACHABALLS IMAGES
+    legendary_ball = pygame.image.load("assets\images\gachapon_screen\legendary gacha ball closed.png").convert_alpha()
+    super_rare_ball = pygame.image.load("assets\images\gachapon_screen\super rare gacha ball closed.png").convert_alpha()
+    rare_ball = pygame.image.load("assets\images\gachapon_screen\\rare gacha ball closed.png").convert_alpha()
+    common_ball = pygame.image.load("assets\images\gachapon_screen\commun gacha ball closed.png").convert_alpha()
+    
+    screen.blit(legendary_ball, legendary_ball.get_rect(topleft=(407, 213)))
+    screen.blit(super_rare_ball, super_rare_ball.get_rect(topleft=(407, 269)))
+    screen.blit(rare_ball, rare_ball.get_rect(topleft=(407, 324)))
+    screen.blit(common_ball, common_ball.get_rect(topleft=(407, 380)))
+    
+    # GACHAPON IMAGE
+    gachapon_image = pygame.image.load("assets\images\gachapon_screen\gachapon.png").convert_alpha()
+    screen.blit(gachapon_image, gachapon_image.get_rect(topleft=(110, 210)))
+
+    # BUTTON
+    btn_roll = draw_button(465, 448, 258, 64, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button(465, 530, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    return btn_roll, btn_back
+
 # --- INVENTORY SCREEN --- #
+def draw_inventory(username, scroll_y):
+    content_height = 1600
+    content_surface = pygame.Surface((600, content_height), pygame.SRCALPHA)
+    content_surface.fill((0, 0, 0, 0))
+
+    # --- DESENHAR CONTEÚDO DO INVENTÁRIO ---
+    start_y = 0
+    for i in range(10):
+        y = start_y + i * 160
+        pygame.draw.rect(content_surface, LIGHT_GRAY, (40, y, 139, 139), border_radius=16)
+
+    # --- FUNDO GERAL ---
+    screen.fill(BACKGROUND_GRAY)
+
+    # --- TÍTULO FIXO ---
+    title = font_title.render("Inventory", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 81)))
+
+    # --- BOTÃO VOLTAR (fixo) ---
+    btn_back = draw_button(
+        (width // 2 - 258 // 2),
+        494,
+        258,
+        64,
+        "Back",
+        font_buttons,
+        WHITE,
+        BUTTON_GRAY,
+        BUTTON_SHADOW_GRAY,
+        BUTTON_SHADOW_GRAY,
+    )
+
+    # --- ÁREA CENTRAL VISÍVEL (VIEWPORT) ---
+    view_width = 562
+    view_height = 322
+    view_x = (width - view_width) // 2
+    view_y = 167
+    view_rect = pygame.Rect(view_x, view_y, view_width, view_height)
+
+    # --- CLIPPING (limita o desenho do conteúdo à área central) ---
+    screen.set_clip(view_rect)
+    screen.blit(content_surface, (view_x, view_y - scroll_y))
+    screen.set_clip(None)
+
+    # --- BARRA DE SCROLL FIXA NA ESQUERDA ---
+    bar_x = 12
+    bar_y = 15
+    bar_width = 22
+    bar_height = height - 30
+
+    pygame.draw.rect(screen, (121, 121, 121), (bar_x, bar_y, bar_width, bar_height), border_radius=16)
+
+    # Handle da barra
+    scroll_bar_height = max(view_height * (bar_height / content_height), 50)
+    scroll_bar_y = (scroll_y / (content_height - view_height)) * (bar_height - scroll_bar_height) + bar_y
+
+    handle_width = 18
+    handle_x = bar_x + (bar_width - handle_width) // 2
+    pygame.draw.rect(screen, WHITE, (handle_x, scroll_bar_y, handle_width, scroll_bar_height), border_radius=16)
+
+    return btn_back, content_height, view_height  # <- retornamos view_height também
 
 # --- REGISTER USER FUNCTION --- #
 def save_user_to_csv(username, password, filepath="data\\users.csv"):
@@ -359,26 +460,42 @@ while running:
             # --- WELCOME (GUEST) --- #   
             elif current_screen == "welcome_guest":
                 if btn_play.collidepoint(mouse_pos):
-                    print("Go to game")
+                    current_screen = "gachapon"
                 elif btn_rarity.collidepoint(mouse_pos):
                     current_screen = "rarity"
                     
             #--- WELCOME (USER) --- #     
             elif current_screen == "welcome_user":
                 if btn_play.collidepoint(mouse_pos):
-                    print("Go to game")
+                    current_screen = "gachapon"
                 elif btn_rarity.collidepoint(mouse_pos):
                     current_screen = "rarity"
                 elif btn_inventory.collidepoint(mouse_pos):
-                    print("To the inventory")
+                    current_screen = "inventory"
                     
             # --- RARITY --- #
             elif current_screen == "rarity":
                 if btn_back.collidepoint(mouse_pos) and current_user!="":
                     current_screen = "welcome_user"
-                elif btn_back.collidepoint(mouse_pos):
+                elif btn_back.collidepoint(mouse_pos) and current_screen=="":
                     current_screen = "welcome_guest"
 
+            # --- GACHAPON --- #
+            elif current_screen == "gachapon":
+                if btn_roll.collidepoint(mouse_pos) and current_user!="":
+                    print(f"EARNED X POINTS | NEW ITEM TO THE INVENTORY OF {current_user}")
+                elif btn_roll.collidepoint(mouse_pos) and current_user == "":
+                    print("EARNED X POINTS | NO ACCOUNT")
+                elif btn_back.collidepoint(mouse_pos) and current_user!="":
+                    current_screen =  "welcome_user"
+                elif btn_back.collidepoint(mouse_pos) and current_user == "":
+                    current_screen =  "welcome_guest"
+
+            # --- INVENTORY --- #
+            elif current_screen == "inventory":
+                if btn_back.collidepoint(mouse_pos):
+                    current_screen = "welcome_user"
+                    
         # CAPTURE THE KEYBOARD 
         if event.type == pygame.KEYDOWN and active_field:
             if event.key == pygame.K_BACKSPACE:
@@ -409,12 +526,17 @@ while running:
                     login_username += char
                 elif active_field == "login_password" and len(login_password) < 20:
                     login_password += char
-
+            
+            # THE SCROLL
+        elif event.type == pygame.MOUSEWHEEL and current_screen == "inventory":
+            scroll_y -= event.y * scroll_speed
+            scroll_y = max(0, min(scroll_y, content_height - view_height))
+            
     # --- RENDERIZATION --- #
     if current_screen == "menu":
         btn_guest, btn_login, btn_signup = draw_menu()
     elif current_screen == "guest":
-        btn_continue, btn_signup, btn_back = draw_guest()
+        btn_continue, btn_signup_guest, btn_back = draw_guest()
     elif current_screen == "login":
         login_username_box, login_password_box, btn_login_submit, btn_back = draw_login(login_username, login_password, active_field)
     elif current_screen == "signup":
@@ -425,6 +547,10 @@ while running:
         btn_play, btn_rarity, btn_inventory = draw_welcome_user(current_user)
     elif current_screen == "rarity":
         btn_back = draw_rarity()
+    elif current_screen == "gachapon":
+        btn_roll, btn_back = draw_gachapon()
+    elif current_screen == "inventory":
+        btn_roll, content_height, view_height = draw_inventory(current_user, scroll_y)
     pygame.display.flip()
     clock.tick(60)
 
