@@ -316,6 +316,7 @@ def draw_inventory(username, scroll_y):
     bar_width = 22
     bar_height = height - 30
 
+
     pygame.draw.rect(screen, (121, 121, 121), (bar_x, bar_y, bar_width, bar_height), border_radius=16)
 
     # Handle da barra
