@@ -18,6 +18,7 @@ BACKGROUND_GRAY =(186, 186, 186)
 BUTTON_GRAY = (198, 198, 198)
 BUTTON_SHADOW_GRAY = (147, 147, 147)
 LIGHT_GRAY = (217, 217, 217)
+YELLOW = (255, 246, 0)
 
 # Clock
 clock = pygame.time.Clock()
@@ -38,7 +39,7 @@ current_screen = "menu"
 
 # Fonts
 try:
-    font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 64)
+    font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 51)
     font_buttons = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 36 )
     font_warning = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 24)
     font_rarity = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 23)
@@ -95,9 +96,9 @@ def draw_menu():
     title = font_title.render("Gachapon Game", True, WHITE)
     screen.blit(title, title.get_rect(center=(width // 2, 87)))
 
-    btn_guest = draw_button((width // 2 - 258 // 2), 240, 258, 64, "Guest", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_login = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Login", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_guest = draw_button((width // 2 - 258 // 2), 240, 258, 51, "Guest", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_login = draw_button((width // 2 - 258 // 2), 322, 258, 51, "Login", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 51, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
     return btn_guest, btn_login, btn_signup
 
@@ -112,9 +113,9 @@ def draw_guest():
     screen.blit(warning, warning.get_rect(center=(width // 2, 220)))
     screen.blit(warning2, warning2.get_rect(center=(width // 2, 255)))
     
-    btn_continue = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_back = draw_button((width // 2 - 258 // 2), 486, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_continue = draw_button((width // 2 - 258 // 2), 322, 258, 51, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_signup = draw_button((width // 2 - 258 // 2), 404, 258, 51, "Sign Up", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 486, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     return btn_continue, btn_signup, btn_back
 
 # --- LOGIN SCREEN --- #
@@ -123,11 +124,11 @@ def draw_login(login_username, login_password, active_field):
     title = font_title.render("Login", True, WHITE)
     screen.blit(title, title.get_rect(center=(width // 2, 87)))
 
-    username_box = draw_input_box((width // 2 - 258 // 2), 248, 258, 64, login_username, active_field == "login_username", "Username")
-    password_box = draw_input_box((width // 2 - 258 // 2), 330, 258, 64, login_password, active_field == "login_password", "Password", is_password=True)
+    username_box = draw_input_box((width // 2 - 258 // 2), 248, 258, 51, login_username, active_field == "login_username", "Username")
+    password_box = draw_input_box((width // 2 - 258 // 2), 330, 258, 51, login_password, active_field == "login_password", "Password", is_password=True)
 
-    btn_login = draw_button((width // 2 - 258 // 2), 412, 258, 64, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_login = draw_button((width // 2 - 258 // 2), 412, 258, 51, "Continue", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
     return username_box, password_box, btn_login, btn_back
   
@@ -137,12 +138,12 @@ def draw_signup(signup_username, signup_password, signup_password_confirm, activ
     title = font_title.render("Sign Up", True, WHITE)
     screen.blit(title, title.get_rect(center=(width // 2, 87)))
     
-    username_box = draw_input_box((width // 2 - 258 // 2), 198, 258, 64, signup_username, active_field == "signup_username", "Username")
-    password_box = draw_input_box((width // 2 - 258 // 2), 280, 258, 64, signup_password, active_field == "signup_password", "Password", is_password=True)
-    password_confirm_box = draw_input_box((width // 2 - 258 // 2), 362, 258, 64, signup_password_confirm, active_field == "signup_password_confirm", "Password", is_password=True)
+    username_box = draw_input_box((width // 2 - 258 // 2), 198, 258, 51, signup_username, active_field == "signup_username", "Username")
+    password_box = draw_input_box((width // 2 - 258 // 2), 280, 258, 51, signup_password, active_field == "signup_password", "Password", is_password=True)
+    password_confirm_box = draw_input_box((width // 2 - 258 // 2), 362, 258, 51, signup_password_confirm, active_field == "signup_password_confirm", "Password", is_password=True)
 
-    btn_register = draw_button((width // 2 - 258 // 2), 444, 258, 64, "Register", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_back = draw_button((width // 2 - 258 // 2), 526, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_register = draw_button((width // 2 - 258 // 2), 444, 258, 51, "Register", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 526, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
     return username_box, password_box, password_confirm_box, btn_register, btn_back
 
@@ -155,8 +156,8 @@ def draw_welcome_guest():
     subtitle = font_title.render("Guest", True, WHITE)
     screen.blit(subtitle, subtitle.get_rect(center=(width // 2, 111)))
     
-    btn_play = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Play", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_rarity = draw_button((width // 2 - 258 // 2), 486, 258, 64, "Rarity", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_play = draw_button((width // 2 - 258 // 2), 404, 258, 51, "Play", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_rarity = draw_button((width // 2 - 258 // 2), 486, 258, 51, "Rarity", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     
     return btn_play, btn_rarity
 
@@ -171,9 +172,9 @@ def draw_welcome_user(username):
     screen.blit(subtitle, subtitle.get_rect(center=(width // 2, 111)))
     
     
-    btn_play = draw_button((width // 2 - 258 // 2), 322, 258, 64, "Play", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_inventory = draw_button((width // 2 - 258 // 2), 404, 258, 64, "Inventory", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_rarity = draw_button((width // 2 - 258 // 2), 486, 258, 64, "Rarity", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_play = draw_button((width // 2 - 258 // 2), 322, 258, 51, "Play", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_inventory = draw_button((width // 2 - 258 // 2), 404, 258, 51, "Inventory", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_rarity = draw_button((width // 2 - 258 // 2), 486, 258, 51, "Rarity", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     
     return btn_play, btn_rarity, btn_inventory
         
@@ -222,7 +223,7 @@ def draw_rarity():
     screen.blit(rare_ball, rare_ball.get_rect(topleft=(448, 279)))
     screen.blit(common_ball, common_ball.get_rect(topleft=(653, 279)))
 
-    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button((width // 2 - 258 // 2), 494, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     return btn_back
 
 # --- GACHAPON SCREEN --- #
@@ -260,8 +261,8 @@ def draw_gachapon():
     screen.blit(gachapon_image, gachapon_image.get_rect(topleft=(110, 210)))
 
     # BUTTON
-    btn_roll = draw_button(465, 448, 258, 64, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
-    btn_back = draw_button(465, 530, 258, 64, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_roll = draw_button(465, 448, 258, 51, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button(465, 530, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     return btn_roll, btn_back
 
 # --- INVENTORY SCREEN --- #
@@ -288,7 +289,7 @@ def draw_inventory(username, scroll_y):
         (width // 2 - 258 // 2),
         494,
         258,
-        64,
+        51,
         "Back",
         font_buttons,
         WHITE,
@@ -326,6 +327,56 @@ def draw_inventory(username, scroll_y):
     pygame.draw.rect(screen, WHITE, (handle_x, scroll_bar_y, handle_width, scroll_bar_height), border_radius=16)
 
     return btn_back, content_height, view_height  # <- retornamos view_height também
+
+# --- PRIZE (GUEST) --- #
+def draw_prize_guest():
+    screen.fill(BACKGROUND_GRAY)
+    
+    # TITLE
+    title = font_title.render("Gachapon", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
+
+    # CONGRATULATIONS
+    congrats = font_warning.render("Congratulations!!!", True, WHITE)
+    screen.blit(congrats, congrats.get_rect(topleft=(465, 181)))
+
+    # PRIZE
+    prize = font_warning.render("Golden duck", True, YELLOW)
+    screen.blit(prize, congrats.get_rect(topleft=(495, 386)))
+    
+    # GACHAPON IMAGE
+    gachapon_image = pygame.image.load("assets\images\gachapon_screen\gachapon.png").convert_alpha()
+    screen.blit(gachapon_image, gachapon_image.get_rect(topleft=(110, 210)))
+
+    # BUTTON
+    btn_roll = draw_button(465, 448, 258, 51, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_back = draw_button(465, 530, 258, 51, "Back", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    return btn_roll, btn_back
+
+# --- PRIZE (USER) --- #
+def draw_prize_user():
+    screen.fill(BACKGROUND_GRAY)
+    
+    # TITLE
+    title = font_title.render("Gachapon", True, WHITE)
+    screen.blit(title, title.get_rect(center=(width // 2, 87)))
+
+    # CONGRATULATIONS
+    congrats = font_warning.render("Congratulations!!!", True, WHITE)
+    screen.blit(congrats, congrats.get_rect(topleft=(465, 181)))
+
+    # PRIZE
+    prize = font_warning.render("Golden duck!!!", True, YELLOW)
+    screen.blit(prize, prize.get_rect(topleft=(495, 383)))
+    
+    # GACHAPON IMAGE
+    gachapon_image = pygame.image.load("assets\images\gachapon_screen\gachapon.png").convert_alpha()
+    screen.blit(gachapon_image, gachapon_image.get_rect(topleft=(110, 210)))
+
+    # BUTTON
+    btn_roll = draw_button(465, 448, 258, 51, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    btn_inventory = draw_button(465, 530, 258, 51, "Inventory", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
+    return btn_inventory, btn_roll
 
 # --- REGISTER USER FUNCTION --- #
 def save_user_to_csv(username, password, filepath="data\\users.csv"):
@@ -477,21 +528,37 @@ while running:
             elif current_screen == "rarity":
                 if btn_back.collidepoint(mouse_pos) and current_user!="":
                     current_screen = "welcome_user"
-                elif btn_back.collidepoint(mouse_pos) and current_screen=="":
+                elif btn_back.collidepoint(mouse_pos) and current_user=="":
                     current_screen = "welcome_guest"
 
             # --- GACHAPON --- #
             elif current_screen == "gachapon":
                 if btn_roll.collidepoint(mouse_pos) and current_user!="":
+                    current_screen = "prize_user"
                     print(f"EARNED X POINTS | NEW ITEM TO THE INVENTORY OF {current_user}")
                 elif btn_roll.collidepoint(mouse_pos) and current_user == "":
+                    current_screen = "prize_guest"
                     print("EARNED X POINTS | NO ACCOUNT")
                 elif btn_back.collidepoint(mouse_pos) and current_user!="":
                     current_screen =  "welcome_user"
                 elif btn_back.collidepoint(mouse_pos) and current_user == "":
                     current_screen =  "welcome_guest"
 
-            # --- INVENTORY --- #
+            # --- PRIZE USER --- #
+            elif current_screen == "prize_user":
+                if btn_inventory.collidepoint(mouse_pos):
+                    current_screen = "inventory"
+                elif btn_roll.collidepoint(mouse_pos):
+                    current_screen = "prize_user"
+                    
+            # --- PRIZE GUEST --- #
+            elif current_screen == "prize_guest":
+                if btn_roll.collidepoint(mouse_pos):
+                    current_screen = "prize_guest"
+                elif btn_back.collidepoint(mouse_pos):
+                    current_screen = "gachapon"
+                    
+            # --- INVENTORY --- # 
             elif current_screen == "inventory":
                 if btn_back.collidepoint(mouse_pos):
                     current_screen = "welcome_user"
@@ -527,7 +594,7 @@ while running:
                 elif active_field == "login_password" and len(login_password) < 20:
                     login_password += char
             
-            # THE SCROLL
+            # SCROLL
         elif event.type == pygame.MOUSEWHEEL and current_screen == "inventory":
             scroll_y -= event.y * scroll_speed
             scroll_y = max(0, min(scroll_y, content_height - view_height))
@@ -550,7 +617,12 @@ while running:
     elif current_screen == "gachapon":
         btn_roll, btn_back = draw_gachapon()
     elif current_screen == "inventory":
-        btn_roll, content_height, view_height = draw_inventory(current_user, scroll_y)
+        btn_back, content_height, view_height = draw_inventory(current_user, scroll_y)
+    elif current_screen == "prize_guest":
+        btn_back, btn_roll = draw_prize_guest()
+    elif current_screen == "prize_user":
+        btn_inventory, btn_roll = draw_prize_user()
+        
     pygame.display.flip()
     clock.tick(60)
 
