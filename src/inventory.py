@@ -1,9 +1,52 @@
+import csv
+import os
+
 class Inventory:
+    FILE = "inventory.csv"
+
     def __init__(self):
-        self.items = []
+        if not os.path.exists(self.FILE):
+            try:
+                with open(self.FILE, "w", newline="", encoding="utf-8") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(["username", "prize", "points", "rarity"])
+            except Exception as e:
+                print(f"Error creating inventory file: {e}")
 
-    def add_item(self, prize):
-        self.items.append(prize)
+    def add_item(self, username, prize):
+        """
+        prize 
+        """
+        try:
+            with open(self.FILE, "a", newline="", encoding="utf-8") as file:
+                writer = csv.writer(file)
+                writer.writerow([
+                    username,
+                    prize.name,
+                    prize.points,
+                    prize.rarity
+                ])
+        except Exception as e:
+            print(f"Error saving item to inventory: {e}")
 
-    def list_items(self):
-        return self.items
+    def load_inventory(self, username):
+        items = []
+
+        try:
+            with open(self.FILE, "r", newline="", encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row["username"] == username:
+                        items.append({
+                            "prize": row["prize"],
+                            "points": int(row["points"]),
+                            "rarity": row["rarity"]
+                        })
+
+        except FileNotFoundError:
+            print("Inventory file not found.")
+
+        except Exception as e:
+            print(f"Error loading inventory: {e}")
+
+        return items
