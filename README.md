@@ -43,14 +43,13 @@ Check Rarity to learn prize probabilities.
 Clone the repository:
 
 git clone https://github.com/yourusername/gachapon-game.git
-cd gachapon-game
-
+`cd gachapon-game`
 
 Install Pygame:
-
-pip install pygame
-
+`pip install pygame`
 
 Run the game:
+`python main.py`
 
-python main.py
+## ✨ Credits
+This project was created by Lucas Kato de Godoi, Gustavo Hamad Tamura, Rafaela Marins Mello, and Joao Guilherme Dias Rodrigues for the course Applied Computer Programming at SIT Japan.

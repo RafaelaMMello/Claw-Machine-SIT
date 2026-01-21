@@ -42,7 +42,6 @@ prize_names_display = {
     "robot": "Mini Robot",
 }
 
-
 # Clock
 clock = pygame.time.Clock()
 running = True
@@ -59,7 +58,7 @@ active_field = None
 scroll_y = 0
 scroll_speed = 40
 
-# Current Screen
+# Setting Current Screen
 current_screen = "menu"
 
 # Fonts
@@ -259,28 +258,24 @@ def draw_gachapon(last_prize):
     title = font_title.render("Gachapon", True, WHITE)
     screen.blit(title, title.get_rect(center=(width // 2, 87)))
 
-    # 👉 SE JÁ TEM PRÊMIO
     if last_prize:
         prize_name = last_prize.name
 
-        # Imagem
+        # Image
         if prize_name in prize_images:
             img = prize_images[prize_name]
             img_width, img_height = 200, 200
             img_scaled = pygame.transform.scale(img, (img_width, img_height))
-            # Centraliza horizontalmente com os botões
             img_x = 465 + 258 // 2 - img_width // 2
             img_y = 150
             screen.blit(img_scaled, (img_x, img_y))
 
-        # Nome bonito e cor
         display_name = prize_names_display.get(prize_name, prize_name)
         color = prize_colors.get(prize_name, WHITE)
         text = font_warning.render(f"You got a {display_name}!", True, color)
         screen.blit(text, text.get_rect(center=(465 + 258 // 2, 370)))
 
     else:
-        # Se não tirou prêmio ainda, mostra legendas
         legendary_desc = font_warning.render("Legendary - 200", True, WHITE)
         super_rare_desc = font_warning.render("Super rare - 150", True, WHITE)
         rare_desc = font_warning.render("Rare - 100", True, WHITE)
@@ -291,7 +286,7 @@ def draw_gachapon(last_prize):
         screen.blit(rare_desc, rare_desc.get_rect(topleft=(494, 343)))
         screen.blit(commun_desc, commun_desc.get_rect(topleft=(494, 399)))
 
-    # GACHAPON IMAGE (sempre aparece)
+    # GACHAPON IMAGE
     gachapon_image = pygame.image.load(
         "assets/images/gachapon_screen/gachapon.png"
     ).convert_alpha()
@@ -318,7 +313,7 @@ def draw_gachapon(last_prize):
 def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
     items = inventory.load_inventory(username)
 
-    # --- LISTA FIXA DE PRÊMIOS ---
+    # Prizes list
     fixed_prizes = ["duck", "dog", "bear", "robot"]
     prize_names_display = {
         "duck": "Golden Duck",
@@ -327,30 +322,26 @@ def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
         "robot": "Mini Robot",
     }
 
-    # Contagem dos prêmios conquistados
     owned_counts = {p: 0 for p in fixed_prizes}
     for item in items:
         prize = item["prize"]
         if prize in owned_counts:
             owned_counts[prize] += 1
 
-    # --- ÁREA DE CONTEÚDO ---
     num_slots = len(fixed_prizes)
     slot_size = 139
     spacing = 160
     padding = 10
     start_y = 0
 
-    # Mantém a área rolável do código original (scroll funcional)
     content_height = 632
     content_surface = pygame.Surface((600, content_height), pygame.SRCALPHA)
     content_surface.fill((0, 0, 0, 0))
 
-    # --- DESENHA OS ITENS ---
+    # --- DRAW ITENS --- #
     for i, prize_key in enumerate(fixed_prizes):
         y = start_y + i * spacing
 
-        # Fundo do slot
         pygame.draw.rect(
             content_surface,
             LIGHT_GRAY,
@@ -358,7 +349,7 @@ def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
             border_radius=16
         )
 
-        # Imagem
+        # Image
         if prize_key in prize_images:
             img = prize_images[prize_key]
             img = pygame.transform.smoothscale(
@@ -366,7 +357,7 @@ def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
                 (slot_size - padding * 2, slot_size - padding * 2)
             )
 
-            # Transparência se não possuir
+            # Change opacity
             if owned_counts[prize_key] == 0:
                 img.set_alpha(80)
             else:
@@ -374,7 +365,6 @@ def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
 
             content_surface.blit(img, (40 + padding, y + padding))
 
-        # Nome e quantidade
         name = prize_names_display.get(prize_key, prize_key.capitalize())
         qty = owned_counts[prize_key]
         color = prize_colors.get(prize_key, WHITE)
@@ -382,29 +372,25 @@ def draw_inventory(username, scroll_y, user_total_points, user_total_itens):
         name_text = font_warning.render(name, True, color)
         qty_text = font_warning.render(f"{qty}x", True, color)
 
-        # Nome centralizado verticalmente com o slot
         content_surface.blit(name_text, (210, y + 55))
-        # Quantidade mais à direita
         content_surface.blit(qty_text, (460, y + 55))
 
-    # --- FUNDO GERAL ---
     screen.fill(BACKGROUND_GRAY)
 
-    # --- TÍTULO ---
+    # --- TITLE --- #
     title = font_title.render("Inventory", True, WHITE)
     screen.blit(title, title.get_rect(center=(width // 2, 81)))
 
-    # --- POINTS & ITEMS ---
+    # --- POINTS & ITEMS --- #
     points = font_warning.render(f"Points: {user_total_points}", True, WHITE)
     screen.blit(points, points.get_rect(topleft=(117, 120)))
 
     itens_text = font_warning.render(f"Items: {user_total_itens}", True, WHITE)
     screen.blit(itens_text, itens_text.get_rect(topleft=(488, 120)))
 
-    # --- BOTÃO VOLTAR ---
     btn_back = draw_button((width // 2 - 258 // 2),494,258,51,"Back",font_buttons,WHITE,BUTTON_GRAY,BUTTON_SHADOW_GRAY,BUTTON_SHADOW_GRAY,)
 
-    # --- ÁREA CENTRAL VISÍVEL (VIEWPORT) ---
+    # --- (VIEWPORT) --- #
     view_width = 562
     view_height = 322
     view_x = (width - view_width) // 2
@@ -471,22 +457,18 @@ def draw_prize_user(mouse_pos=None, mouse_click=False):
     btn_roll = draw_button(465, 500, 258, 51, "Roll", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
     btn_inventory = draw_button(465, 580, 258, 51, "Inventory", font_buttons, WHITE, BUTTON_GRAY, BUTTON_SHADOW_GRAY, BUTTON_SHADOW_GRAY)
 
-    # Clicar no botão Roll para gerar prêmio
     if mouse_click and btn_roll.collidepoint(mouse_pos):
         last_prize = gacha.roll()
 
-    # Desenhar último prêmio obtido
     if last_prize:
         img = prize_images.get(last_prize.name)
         if img:
             img_width, img_height = 200, 200
             img_scaled = pygame.transform.scale(img, (img_width, img_height))
-            # Centraliza imagem no centro dos botões
             img_x = 465 + 258 // 2 - img_width // 2
             img_y = 150
             screen.blit(img_scaled, (img_x, img_y))
 
-        # Texto bonito com cor específica
         display_name = prize_names_display.get(last_prize.name, last_prize.name)
         color = prize_colors.get(last_prize.name, WHITE)
         text = font_warning.render(f"You got a {display_name}!", True, color)
@@ -698,28 +680,29 @@ while running:
             scroll_y = max(0, min(scroll_y, content_height - view_height))
             
     # --- RENDERIZATION --- #
-    if current_screen == "menu":
-        btn_guest, btn_login, btn_signup = draw_menu()
-    elif current_screen == "guest":
-        btn_continue, btn_signup_guest, btn_back = draw_guest()
-    elif current_screen == "login":
-        login_username_box, login_password_box, btn_login_submit, btn_back = draw_login(login_username, login_password, active_field)
-    elif current_screen == "signup":
-        signup_username_box, signup_password_box, signup_password_confirm_box, btn_register, btn_back = draw_signup(username_text, password_text, rptpassword_text, active_field)
-    elif current_screen == "welcome_guest":
-        btn_play, btn_rarity = draw_welcome_guest()
-    elif current_screen == "welcome_user":
-        btn_play, btn_rarity, btn_inventory = draw_welcome_user(current_user)
-    elif current_screen == "rarity":
-        btn_back = draw_rarity()
-    elif current_screen == "gachapon":
-        btn_roll, btn_back = draw_gachapon(last_prize)
-    elif current_screen == "inventory":
-        btn_back, content_height, view_height = draw_inventory(current_user, scroll_y, user_total_points, user_total_itens)
-    elif current_screen == "prize_guest":
-        btn_back, btn_roll = draw_prize_guest()
-    elif current_screen == "prize_user":
-        btn_inventory, btn_roll = draw_prize_user()
+    match current_screen:
+        case "menu":
+            btn_guest, btn_login, btn_signup = draw_menu()
+        case "guest":
+            tn_continue, btn_signup_guest, btn_back = draw_guest()
+        case "login":
+            login_username_box, login_password_box, btn_login_submit, btn_back = draw_login(login_username, login_password, active_field)
+        case "signup":
+            signup_username_box, signup_password_box, signup_password_confirm_box, btn_register, btn_back = draw_signup(username_text, password_text, rptpassword_text, active_field)
+        case "welcome_guest":
+            btn_play, btn_rarity = draw_welcome_guest()
+        case "welcome_user":
+            btn_play, btn_rarity, btn_inventory = draw_welcome_user(current_user)
+        case "rarity":
+            btn_back = draw_rarity()
+        case "gachapon":
+            btn_roll, btn_back = draw_gachapon(last_prize)
+        case "inventory":
+            btn_back, content_height, view_height = draw_inventory(current_user, scroll_y, user_total_points, user_total_itens)
+        case "prize_guest":
+            btn_back, btn_roll = draw_prize_guest()
+        case "prize_user":
+            btn_inventory, btn_roll = draw_prize_user()
     pygame.display.flip()
     clock.tick(60)
 

@@ -60,7 +60,7 @@ class DataManager:
                             int(row["points"])
                         )
 
-            return None  # usuário não encontrado
+            return None  # USER NOT FOUND
 
         except FileNotFoundError:
             return None

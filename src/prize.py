@@ -7,7 +7,7 @@ class Prize:
     def __str__(self):
         return f"{self.name} ({self.rarity}) - {self.points} pts"
 
-    # LISTA ESTÁTICA DE PRÊMIOS
+    # PRIZES LIST
     PRIZES = [
         # Common
         ("duck", "Common", 25),
