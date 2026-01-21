@@ -2,9 +2,12 @@ import pygame
 import sys
 import csv
 import os
+from data_manager import DataManager
 
 # Initialize Pygame
 pygame.init()
+
+user = DataManager()
 
 # Windows Settings
 width, height = 800, 600
@@ -39,7 +42,7 @@ current_screen = "menu"
 
 # Fonts
 try:
-    font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 51)
+    font_title = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 64)
     font_buttons = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 36 )
     font_warning = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 24)
     font_rarity = pygame.font.Font("assets/fonts/KronaOne-Regular.ttf", 23)
@@ -316,7 +319,6 @@ def draw_inventory(username, scroll_y):
     bar_width = 22
     bar_height = height - 30
 
-
     pygame.draw.rect(screen, (121, 121, 121), (bar_x, bar_y, bar_width, bar_height), border_radius=16)
 
     # Handle da barra
@@ -469,19 +471,19 @@ while running:
                     rptpassword_text = ""
                 elif btn_register.collidepoint(mouse_pos):
                     if password_text == rptpassword_text and password_text != "":
-                        success = save_user_to_csv(username_text, password_text)
+                        success = user.save_user(username_text, password_text)
                         if success:
-                            print(f"✅ USER CREATED: {username_text}")
+                            print(f" USER CREATED: {username_text}")
                             current_user = username_text
                             current_screen = "welcome_user"
                         else:
-                            print("⚠️ USER ALREADY EXIST!")
+                            print(" USER ALREADY EXIST!")
                         username_text = ""
                         password_text = ""
                         rptpassword_text = ""
                         active_field = None
                     else:
-                        print("❌ PASSWORD WRONG!")
+                        print(" PASSWORD WRONG!")
                 else:
                     active_field = None
 
@@ -497,12 +499,12 @@ while running:
                     login_username = ""
                     login_password = ""
                 elif btn_login_submit.collidepoint(mouse_pos):
-                    if check_login(login_username, login_password):
+                    if user.user_exists(login_username, login_password):
                         current_user = login_username
-                        print(f"✅ LOGIN: {current_user}")
+                        print(f" LOGIN: {current_user}")
                         current_screen = "welcome_user"
                     else:
-                        print("❌ USER OR PASSWORD INCORRECT.")
+                        print(" USER OR PASSWORD INCORRECT.")
                     login_username = ""
                     login_password = ""
                     active_field = None
@@ -529,16 +531,14 @@ while running:
             elif current_screen == "rarity":
                 if btn_back.collidepoint(mouse_pos) and current_user!="":
                     current_screen = "welcome_user"
-                elif btn_back.collidepoint(mouse_pos) and current_user=="":
+                elif btn_back.collidepoint(mouse_pos) and current_screen=="":
                     current_screen = "welcome_guest"
 
             # --- GACHAPON --- #
             elif current_screen == "gachapon":
                 if btn_roll.collidepoint(mouse_pos) and current_user!="":
-                    current_screen = "prize_user"
                     print(f"EARNED X POINTS | NEW ITEM TO THE INVENTORY OF {current_user}")
                 elif btn_roll.collidepoint(mouse_pos) and current_user == "":
-                    current_screen = "prize_guest"
                     print("EARNED X POINTS | NO ACCOUNT")
                 elif btn_back.collidepoint(mouse_pos) and current_user!="":
                     current_screen =  "welcome_user"
