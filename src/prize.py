@@ -14,16 +14,16 @@ class Prize:
         ("duck", "Common", 25),
 
         # Rare
-        ("duck", "Rare", 100),
-        ("duck", "Rare", 100),
+        ("dog", "Rare", 100),
+        ("dog", "Rare", 100),
 
         # Super rare
-        ("duck", "Super rare", 150),
-        ("duck", "Super rare", 150), 
+        ("bear", "Super rare", 150),
+        ("bear", "Super rare", 150), 
         
         # Legendary
-        ("duck", "Legendary", 200),
-        ("duck", "Legendary", 200)
+        ("robot", "Legendary", 200),
+        ("robot", "Legendary", 200)
     ]
 
     @staticmethod
