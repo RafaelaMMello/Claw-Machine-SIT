@@ -13,6 +13,4 @@ class User(Player):
         self.inventory.add_item(prize)
         self.points += prize.points
     
-    ##ponto vai ser adicionado dentro do inventario e acessado mais tarde
-
     
