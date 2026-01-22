@@ -50,3 +50,16 @@ class Inventory:
             print(f"Error loading inventory: {e}")
 
         return items
+    
+    def total_points(self, username):
+        items = self.load_inventory(username)
+        total = 0
+
+        for item in items:
+            total += item["points"]
+
+        return total
+
+    def total_items(self, username):
+        return len(self.load_inventory(username))
+

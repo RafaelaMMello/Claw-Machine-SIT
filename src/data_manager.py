@@ -15,19 +15,6 @@ class DataManager:
         except Exception as e:
             print(f"Error initializing file: {e}")
 
-    # def user_exists(self, name):
-    #     try:
-    #         with open(self.FILE, "r", newline="", encoding="utf-8") as file:
-    #             reader = csv.DictReader(file)
-    #             return any(row["name"] == name for row in reader)
-
-    #     except FileNotFoundError:
-    #         return False
-
-    #     except Exception as e:
-    #         print(f"Error checking user: {e}")
-    #         return False
-
     def check_login(self, username, password):
         
         with open(self.FILE, "r") as file:
@@ -72,3 +59,22 @@ class DataManager:
         except Exception as e:
             print(f"Error loading user: {e}")
             return None
+        
+    def update_user_points(self, username, new_points):
+        rows = []
+
+        try:
+            with open(self.FILE, "r", newline="", encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row["name"] == username:
+                        row["points"] = str(new_points)
+                    rows.append(row)
+
+            with open(self.FILE, "w", newline="", encoding="utf-8") as file:
+                writer = csv.DictWriter(file, fieldnames=["name", "password", "points"])
+                writer.writeheader()
+                writer.writerows(rows)
+
+        except Exception as e:
+            print(f"Error updating points: {e}")

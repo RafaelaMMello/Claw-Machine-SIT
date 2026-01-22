@@ -11,19 +11,19 @@ class Prize:
     PRIZES = [
         # Common
         ("duck", "Common", 25),
-        ("duck", "Common", 25),
+        ("dog", "Common", 25),
 
         # Rare
         ("duck", "Rare", 100),
-        ("duck", "Rare", 100),
+        ("dog", "Rare", 100),
 
         # Super rare
         ("duck", "Super rare", 150),
-        ("duck", "Super rare", 150), 
+        ("robot", "Super rare", 150), 
         
         # Legendary
-        ("duck", "Legendary", 200),
-        ("duck", "Legendary", 200)
+        ("bear", "Legendary", 200),
+        ("duckgold", "Legendary", 200)
     ]
 
     @staticmethod

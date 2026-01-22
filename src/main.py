@@ -530,6 +530,8 @@ while running:
                     if current_user != "":
                         last_prize = gacha.roll()
                         inventory.add_item(current_user, last_prize)
+                        users.add_points(current_user, last_prize.points)
+
 
                         print(
                             f"EARNED {last_prize.points} POINTS | "
