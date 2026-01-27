@@ -11,18 +11,14 @@ class Prize:
     PRIZES = [
         # Common
         ("duck", "Common", 25),
-        ("duck", "Common", 25),
 
         # Rare
-        ("dog", "Rare", 100),
         ("dog", "Rare", 100),
 
         # Super rare
         ("bear", "Super rare", 150),
-        ("bear", "Super rare", 150), 
         
         # Legendary
-        ("robot", "Legendary", 200),
         ("robot", "Legendary", 200)
     ]
 
