@@ -14,9 +14,7 @@ class Inventory:
                 print(f"Error creating inventory file: {e}")
 
     def add_item(self, username, prize):
-        """
-        prize 
-        """
+        
         try:
             with open(self.FILE, "a", newline="", encoding="utf-8") as file:
                 writer = csv.writer(file)

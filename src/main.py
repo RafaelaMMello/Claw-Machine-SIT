@@ -684,7 +684,7 @@ while running:
         case "menu":
             btn_guest, btn_login, btn_signup = draw_menu()
         case "guest":
-            tn_continue, btn_signup_guest, btn_back = draw_guest()
+            btn_continue, btn_signup_guest, btn_back = draw_guest()
         case "login":
             login_username_box, login_password_box, btn_login_submit, btn_back = draw_login(login_username, login_password, active_field)
         case "signup":

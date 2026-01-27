@@ -15,19 +15,6 @@ class DataManager:
         except Exception as e:
             print(f"Error initializing file: {e}")
 
-    # def user_exists(self, name):
-    #     try:
-    #         with open(self.FILE, "r", newline="", encoding="utf-8") as file:
-    #             reader = csv.DictReader(file)
-    #             return any(row["name"] == name for row in reader)
-
-    #     except FileNotFoundError:
-    #         return False
-
-    #     except Exception as e:
-    #         print(f"Error checking user: {e}")
-    #         return False
-
     def check_login(self, username, password):
         
         with open(self.FILE, "r") as file:
